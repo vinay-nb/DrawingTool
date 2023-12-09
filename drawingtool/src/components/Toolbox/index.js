@@ -1,7 +1,11 @@
-import { COLORS, MENU_ITEMS } from "@/constants";
+import { CANVAS_COLORS, COLORS, MENU_ITEMS } from "@/constants";
 import styles from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { changeColor, changeBrushSize } from "@/slice/toolboxSlice";
+import {
+  changeColor,
+  changeBrushSize,
+  changeCanvasColor,
+} from "@/slice/toolboxSlice";
 import cx from "classnames";
 import { socket } from "@/socket";
 
@@ -21,6 +25,10 @@ const Toolbox = () => {
   const updateColor = (newColor) => {
     dispatch(changeColor({ item: activeMenuItem, color: newColor }));
     socket.emit("changeConfig", { color: newColor, size });
+  };
+
+  const updateCanvasColor = (newColor) => {
+    dispatch(changeCanvasColor({ canvasColor: newColor }));
   };
 
   return (
@@ -88,6 +96,39 @@ const Toolbox = () => {
           </div>
         </div>
       )}
+      <div className={styles.toolItem}>
+        <h4 className={styles.toolText}>Canvas Background</h4>
+        <div className={styles.itemContainer}>
+          <div
+            className={cx(styles.colorBox, {
+              [styles.active]: color === CANVAS_COLORS.PURPLE,
+            })}
+            style={{ backgroundColor: CANVAS_COLORS.PURPLE }}
+            onClick={() => updateCanvasColor(CANVAS_COLORS.PURPLE)}
+          ></div>
+          <div
+            className={cx(styles.colorBox, {
+              [styles.active]: color === CANVAS_COLORS.GRAY,
+            })}
+            style={{ backgroundColor: CANVAS_COLORS.GRAY }}
+            onClick={() => updateCanvasColor(CANVAS_COLORS.GRAY)}
+          ></div>
+          <div
+            className={cx(styles.colorBox, {
+              [styles.active]: color === CANVAS_COLORS.LIME,
+            })}
+            style={{ backgroundColor: CANVAS_COLORS.LIME }}
+            onClick={() => updateCanvasColor(CANVAS_COLORS.LIME)}
+          ></div>
+          <div
+            className={cx(styles.colorBox, {
+              [styles.active]: color === CANVAS_COLORS.PINK,
+            })}
+            style={{ backgroundColor: CANVAS_COLORS.PINK }}
+            onClick={() => updateCanvasColor(CANVAS_COLORS.PINK)}
+          ></div>
+        </div>
+      </div>
     </div>
   );
 };

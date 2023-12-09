@@ -16,4 +16,11 @@ const MENU_ITEMS = {
   DOWNLOAD: "DOWNLOAD",
 };
 
-export { COLORS, MENU_ITEMS };
+const CANVAS_COLORS = {
+  GRAY: "#f3f4f6",
+  LIME: "#f7fee7",
+  PURPLE: "#f3e8ff",
+  PINK: "#fdf2f8",
+};
+
+export { COLORS, MENU_ITEMS, CANVAS_COLORS };
