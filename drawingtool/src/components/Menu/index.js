@@ -5,6 +5,7 @@ import {
   faRotateLeft,
   faRotateRight,
   faFileArrowDown,
+  faFont,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,6 +41,14 @@ const Menu = () => {
         onClick={() => handleMenuClick(MENU_ITEMS.ERASER)}
       >
         <FontAwesomeIcon icon={faEraser} className={styles.icon} />
+      </div>
+      <div
+        className={cx(styles.iconWrapper, {
+          [styles.active]: activeMenuItem === MENU_ITEMS.TEXT,
+        })}
+        onClick={() => handleMenuClick(MENU_ITEMS.TEXT)}
+      >
+        <FontAwesomeIcon icon={faFont} className={styles.icon} />
       </div>
       <div
         className={styles.iconWrapper}

@@ -12,9 +12,7 @@ const Board = () => {
   const historyPointer = useRef(0);
   const shoudlDraw = useRef(false);
   const { activeMenuItem, actionMenuItem } = useSelector((state) => state.menu);
-  const { color, size, canvasColor } = useSelector(
-    (state) => state.toolbox[activeMenuItem]
-  );
+  const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -53,7 +51,7 @@ const Board = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    const changeConfig = (color, size, canvasColor) => {
+    const changeConfig = (color, size) => {
       context.strokeStyle = color;
       context.lineWidth = size;
       // context.fillStyle = canvasColor;
@@ -64,13 +62,13 @@ const Board = () => {
       changeConfig(config.color, config.size);
     };
 
-    changeConfig(color, size, canvasColor);
+    changeConfig(color, size);
     socket.on("changeConfig", handleChangeConfig);
 
     return () => {
       socket.off("changeConfig", handleChangeConfig);
     };
-  }, [color, size, canvasColor]);
+  }, [color, size]);
 
   // before browser paint
   useLayoutEffect(() => {

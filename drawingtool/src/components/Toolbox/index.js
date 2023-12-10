@@ -1,20 +1,22 @@
-import { CANVAS_COLORS, COLORS, MENU_ITEMS } from "@/constants";
+import { COLORS, MENU_ITEMS } from "@/constants";
 import styles from "./index.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeColor,
-  changeBrushSize,
-  changeCanvasColor,
-} from "@/slice/toolboxSlice";
+import { changeColor, changeBrushSize } from "@/slice/toolboxSlice";
 import cx from "classnames";
 import { socket } from "@/socket";
+import { faL, faM, faS } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Toolbox = () => {
   const dispatch = useDispatch();
   const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
   const showStrokeToolOption = activeMenuItem === MENU_ITEMS.PENCIL;
   const showBrushToolOption =
-    activeMenuItem === MENU_ITEMS.ERASER || MENU_ITEMS.PENCIL;
+    activeMenuItem === MENU_ITEMS.ERASER ||
+    MENU_ITEMS.PENCIL ||
+    MENU_ITEMS.TEXT;
+  const textToolOption = activeMenuItem === MENU_ITEMS.TEXT;
+  console.log(textToolOption, showBrushToolOption);
   const { color, size } = useSelector((state) => state.toolbox[activeMenuItem]);
 
   const updateBrushSize = (e) => {
@@ -25,10 +27,6 @@ const Toolbox = () => {
   const updateColor = (newColor) => {
     dispatch(changeColor({ item: activeMenuItem, color: newColor }));
     socket.emit("changeConfig", { color: newColor, size });
-  };
-
-  const updateCanvasColor = (newColor) => {
-    dispatch(changeCanvasColor({ canvasColor: newColor }));
   };
 
   return (
@@ -82,7 +80,7 @@ const Toolbox = () => {
           </div>
         </div>
       )}
-      {showBrushToolOption && (
+      {showBrushToolOption && !textToolOption && (
         <div className={styles.toolItem}>
           <h4 className={styles.toolText}>Brush Size</h4>
           <div className={styles.itemContainer}>
@@ -96,39 +94,81 @@ const Toolbox = () => {
           </div>
         </div>
       )}
-      <div className={styles.toolItem}>
-        <h4 className={styles.toolText}>Canvas Background</h4>
-        <div className={styles.itemContainer}>
-          <div
-            className={cx(styles.colorBox, {
-              [styles.active]: color === CANVAS_COLORS.PURPLE,
-            })}
-            style={{ backgroundColor: CANVAS_COLORS.PURPLE }}
-            onClick={() => updateCanvasColor(CANVAS_COLORS.PURPLE)}
-          ></div>
-          <div
-            className={cx(styles.colorBox, {
-              [styles.active]: color === CANVAS_COLORS.GRAY,
-            })}
-            style={{ backgroundColor: CANVAS_COLORS.GRAY }}
-            onClick={() => updateCanvasColor(CANVAS_COLORS.GRAY)}
-          ></div>
-          <div
-            className={cx(styles.colorBox, {
-              [styles.active]: color === CANVAS_COLORS.LIME,
-            })}
-            style={{ backgroundColor: CANVAS_COLORS.LIME }}
-            onClick={() => updateCanvasColor(CANVAS_COLORS.LIME)}
-          ></div>
-          <div
-            className={cx(styles.colorBox, {
-              [styles.active]: color === CANVAS_COLORS.PINK,
-            })}
-            style={{ backgroundColor: CANVAS_COLORS.PINK }}
-            onClick={() => updateCanvasColor(CANVAS_COLORS.PINK)}
-          ></div>
+      {textToolOption && (
+        <div className={styles.toolItem}>
+          <h4 className={styles.toolText}>Text Color</h4>
+          <div className={styles.itemContainer}>
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.BLACK,
+              })}
+              style={{ backgroundColor: COLORS.BLACK }}
+              onClick={() => updateColor(COLORS.BLACK)}
+            />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.RED,
+              })}
+              style={{ backgroundColor: COLORS.RED }}
+              onClick={() => updateColor(COLORS.RED)}
+            />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.GREEN,
+              })}
+              style={{ backgroundColor: COLORS.GREEN }}
+              onClick={() => updateColor(COLORS.GREEN)}
+            />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.BLUE,
+              })}
+              style={{ backgroundColor: COLORS.BLUE }}
+              onClick={() => updateColor(COLORS.BLUE)}
+            />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.ORANGE,
+              })}
+              style={{ backgroundColor: COLORS.ORANGE }}
+              onClick={() => updateColor(COLORS.ORANGE)}
+            />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: color === COLORS.YELLOW,
+              })}
+              style={{ backgroundColor: COLORS.YELLOW }}
+              onClick={() => updateColor(COLORS.YELLOW)}
+            />
+          </div>
+          <div className={styles.textSizeContainer}>
+            <h4 className={styles.toolText}>Text Size</h4>
+            <div className={styles.textWrapper}>
+              <div className={styles.textBox}>
+                <FontAwesomeIcon icon={faS} className={styles.icon} />
+              </div>
+              <div className={styles.textBox}>
+                <FontAwesomeIcon icon={faM} className={styles.icon} />
+              </div>
+              <div className={styles.textBox}>
+                <FontAwesomeIcon icon={faL} className={styles.icon} />
+              </div>
+            </div>
+          </div>
+          <div className={styles.toolItem}>
+            <h4 className={styles.toolText}>Opacity</h4>
+            <div className={styles.itemContainer}>
+              <input
+                type="range"
+                min={1}
+                max={10}
+                step={1}
+                onChange={updateBrushSize}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
